@@ -1,3 +1,12 @@
+export enum UserRole {
+	Teacher = 'Teacher',
+	Student = 'Student',
+}
+
 export interface IUser {
-	namse: string
+	_id?: string
+	username?: string
+	email: string
+	passwordHash: string
+	role: UserRole
 }
