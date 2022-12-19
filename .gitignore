@@ -3,6 +3,7 @@
 # compiled output
 dist
 tmp
+docker-compose.yml
 /out-tsc
 /envs
 
