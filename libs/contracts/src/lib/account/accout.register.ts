@@ -2,9 +2,9 @@ export namespace AccountRegister {
 	export const topic = 'account.register.command'
 
 	export class Request {
-		displayName?: string
 		email: string
 		password: string
+		username?: string
 	}
 
 	export class Response {

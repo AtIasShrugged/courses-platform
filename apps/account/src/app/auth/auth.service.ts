@@ -1,9 +1,9 @@
+import { AccountRegister } from '@courses-platform/contracts'
 import { UserRole } from '@courses-platform/interfaces'
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { UserEntity } from '../user/entities/user.entity'
 import { UserRepository } from '../user/repositories/user.repository'
-import { RegisterDto } from './auth.controller'
 
 @Injectable()
 export class AuthService {
@@ -12,7 +12,7 @@ export class AuthService {
 		private readonly jwtService: JwtService
 	) {}
 
-	async register(dto: RegisterDto) {
+	async register(dto: AccountRegister.Request) {
 		const { email, password, username } = dto
 
 		const user = await this.userRepository.findUser(email)
