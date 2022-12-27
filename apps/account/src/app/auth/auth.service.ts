@@ -23,6 +23,7 @@ export class AuthService {
 		const newUserEntity = await new UserEntity({
 			username,
 			email,
+			passwordHash: '',
 			role: UserRole.Student,
 		}).setPassword(password)
 

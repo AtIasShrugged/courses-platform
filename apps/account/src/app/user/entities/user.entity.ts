@@ -1,8 +1,6 @@
 import { IUser, UserRole } from '@courses-platform/interfaces'
 import { compare, genSalt, hash } from 'bcryptjs'
 
-export type CreateDTO = Omit<IUser, 'passwordHash'>
-
 export class UserEntity implements IUser {
 	_id?: string
 	username?: string
@@ -10,9 +8,10 @@ export class UserEntity implements IUser {
 	passwordHash: string
 	role: UserRole
 
-	constructor(user: CreateDTO) {
+	constructor(user: IUser) {
 		this._id = user._id
 		this.username = user.username
+		this.passwordHash = user.passwordHash
 		this.email = user.email
 		this.role = user.role
 	}
