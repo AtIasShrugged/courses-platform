@@ -1,4 +1,4 @@
-import { IUser, UserRole } from '@courses-platform/interfaces'
+import { IUser, IUserCourse, UserRole } from '@courses-platform/interfaces'
 import { compare, genSalt, hash } from 'bcryptjs'
 
 export class UserEntity implements IUser {
@@ -7,6 +7,7 @@ export class UserEntity implements IUser {
 	email: string
 	passwordHash: string
 	role: UserRole
+	courses?: IUserCourse[]
 
 	constructor(user: IUser) {
 		this._id = user._id
@@ -14,6 +15,7 @@ export class UserEntity implements IUser {
 		this.passwordHash = user.passwordHash
 		this.email = user.email
 		this.role = user.role
+		this.courses = user.courses
 	}
 
 	public async setPassword(password: string) {
