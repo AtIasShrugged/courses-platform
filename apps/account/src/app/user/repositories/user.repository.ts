@@ -10,16 +10,20 @@ export class UserRepository {
 		@InjectModel(User.name) private readonly userModel: Model<User>
 	) {}
 
-	createUser(user: UserEntity) {
+	create(user: UserEntity) {
 		const newUser = new this.userModel(user)
 		return newUser.save()
 	}
 
-	async findUser(email: string) {
+	async findById(id: string) {
+		return this.userModel.findById(id).exec()
+	}
+
+	async findByEmail(email: string) {
 		return this.userModel.findOne({ email }).exec()
 	}
 
-	async deleteUser(email: string) {
+	async delete(email: string) {
 		return this.userModel.deleteOne({ email }).exec()
 	}
 }

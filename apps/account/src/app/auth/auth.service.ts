@@ -15,7 +15,7 @@ export class AuthService {
 	async register(dto: AccountRegister.Request) {
 		const { email, password, username } = dto
 
-		const user = await this.userRepository.findUser(email)
+		const user = await this.userRepository.findByEmail(email)
 		if (user) {
 			throw new Error('User already exists')
 		}
@@ -27,7 +27,7 @@ export class AuthService {
 			role: UserRole.Student,
 		}).setPassword(password)
 
-		const newUser = await this.userRepository.createUser(newUserEntity)
+		const newUser = await this.userRepository.create(newUserEntity)
 		return { email: newUser.email }
 	}
 
@@ -38,7 +38,7 @@ export class AuthService {
 	}
 
 	async validateUser(email: string, password: string) {
-		const user = await this.userRepository.findUser(email)
+		const user = await this.userRepository.findByEmail(email)
 		if (!user) {
 			throw new Error('Wrong data')
 		}
