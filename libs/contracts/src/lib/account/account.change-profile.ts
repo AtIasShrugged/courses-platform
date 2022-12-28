@@ -1,15 +1,18 @@
 import { IUser } from '@courses-platform/interfaces'
 import { IsString } from 'class-validator'
 
-export namespace AccountUserInfo {
-	export const topic = 'account.user-info.query'
+export namespace AccountChangeProfile {
+	export const topic = 'account.change-profile.command'
 
 	export class Request {
 		@IsString()
 		id: string
+
+		@IsString()
+		payload: Pick<IUser, 'username'>
 	}
 
 	export class Response {
-		profile: Omit<IUser, '_id' | 'passwordHash' | 'courses'>
+		user: Pick<IUser, 'username'>
 	}
 }
