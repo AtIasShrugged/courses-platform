@@ -1,4 +1,6 @@
+import { AccountCourseChanged } from '@courses-platform/contracts'
 import {
+	IDomainEvent,
 	IUser,
 	IUserCourse,
 	PurchaseState,
@@ -13,6 +15,7 @@ export class UserEntity implements IUser {
 	passwordHash: string
 	role: UserRole
 	courses?: IUserCourse[]
+	events: IDomainEvent[] = []
 
 	constructor(user: IUser) {
 		this._id = user._id
@@ -39,11 +42,19 @@ export class UserEntity implements IUser {
 	public setCourseState(courseId: string, state: PurchaseState) {
 		if (state === PurchaseState.Started) {
 			this.addCourse(courseId)
+			this.events.push({
+				topic: AccountCourseChanged.topic,
+				data: { courseId, userId: this._id, state },
+			})
 			return this
 		}
 
 		if (state === PurchaseState.Canceled) {
 			this.deleteCourse(courseId)
+			this.events.push({
+				topic: AccountCourseChanged.topic,
+				data: { courseId, userId: this._id, state },
+			})
 			return this
 		}
 
@@ -55,6 +66,10 @@ export class UserEntity implements IUser {
 			return c
 		})
 
+		this.events.push({
+			topic: AccountCourseChanged.topic,
+			data: { courseId, userId: this._id, state },
+		})
 		return this
 	}
 
