@@ -1,6 +1,6 @@
 import { AccountLogin, AccountRegister } from '@courses-platform/contracts'
-import { Body, Controller } from '@nestjs/common'
-import { RMQRoute, RMQValidate } from 'nestjs-rmq'
+import { Controller, Logger } from '@nestjs/common'
+import { Message, RMQMessage, RMQRoute, RMQValidate } from 'nestjs-rmq'
 import { AuthService } from './auth.service'
 
 @Controller()
@@ -10,16 +10,22 @@ export class AuthController {
 	@RMQValidate()
 	@RMQRoute(AccountRegister.topic)
 	async register(
-		@Body() dto: AccountRegister.Request
+		dto: AccountRegister.Request,
+		@RMQMessage msg: Message
 	): Promise<AccountRegister.Response> {
+		const rid = msg.properties.headers['requestId']
+		const logger = new Logger(rid) // just for test, remove later
+		logger.log('Test rid')
+
 		return this.authService.register(dto)
 	}
 
 	@RMQValidate()
 	@RMQRoute(AccountLogin.topic)
-	async login(
-		@Body() { email, password }: AccountLogin.Request
-	): Promise<AccountLogin.Response> {
+	async login({
+		email,
+		password,
+	}: AccountLogin.Request): Promise<AccountLogin.Response> {
 		const { id } = await this.authService.validateUser(email, password)
 		return this.authService.login(id)
 	}
