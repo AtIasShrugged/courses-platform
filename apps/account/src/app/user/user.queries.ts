@@ -2,14 +2,17 @@ import {
 	AccountUserCourses,
 	AccountUserInfo,
 } from '@courses-platform/contracts'
-import { Body, Controller } from '@nestjs/common'
-import { RMQRoute, RMQValidate } from 'nestjs-rmq'
+import { Body, Controller, Get } from '@nestjs/common'
+import { RMQRoute, RMQService, RMQValidate } from 'nestjs-rmq'
 import { UserEntity } from './entities/user.entity'
 import { UserRepository } from './repositories/user.repository'
 
 @Controller()
 export class UserQueries {
-	constructor(private readonly userRepository: UserRepository) {}
+	constructor(
+		private readonly userRepository: UserRepository,
+		private readonly rmqService: RMQService
+	) {}
 
 	@RMQValidate()
 	@RMQRoute(AccountUserInfo.topic)
@@ -30,5 +33,13 @@ export class UserQueries {
 		return {
 			courses: user.courses,
 		}
+	}
+
+	@Get('health-check')
+	async healthCheck() {
+		const isRMQ = this.rmqService.healthCheck()
+		// TODO: if no - call restart connection or throw error
+		const user = await this.userRepository.healthCheck()
+		// TODO: if no - call restart connection or throw error
 	}
 }
