@@ -26,8 +26,15 @@ export class UserEntity implements IUser {
 		this.courses = user.courses
 	}
 
+	public getCourseState(courseId: string) {
+		return (
+			this.courses.find((c) => c.courseId === courseId)?.purchaseState ??
+			PurchaseState.Started
+		)
+	}
+
 	public addCourse(courseId: string) {
-		const existedCourse = this.courses.find((c) => c._id === courseId)
+		const existedCourse = this.courses.find((c) => c.courseId === courseId)
 		if (existedCourse) {
 			throw new Error('You already own this course')
 		}
@@ -36,7 +43,7 @@ export class UserEntity implements IUser {
 	}
 
 	public deleteCourse(courseId: string) {
-		this.courses = this.courses.filter((c) => c._id !== courseId)
+		this.courses = this.courses.filter((c) => c.courseId !== courseId)
 	}
 
 	public setCourseState(courseId: string, state: PurchaseState) {
@@ -59,7 +66,7 @@ export class UserEntity implements IUser {
 		}
 
 		this.courses = this.courses.map((c) => {
-			if (c._id === courseId) {
+			if (c.courseId === courseId) {
 				c.purchaseState = state
 				return c
 			}
